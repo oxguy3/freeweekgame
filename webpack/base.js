@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -25,15 +25,31 @@ module.exports = {
       }
     ]
   },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    clean: true,
+  },
   plugins: [
-    new CleanWebpackPlugin({
-      root: path.resolve(__dirname, "../")
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: '*',
+          context: 'assets',
+          to: 'assets'
+        },
+        {
+          from: '**/*',
+          context: 'public',
+          to: './'
+        },
+      ]
     }),
     new webpack.DefinePlugin({
       CANVAS_RENDERER: JSON.stringify(true),
       WEBGL_RENDERER: JSON.stringify(true)
     }),
     new HtmlWebpackPlugin({
+      title: "freeweekgame",
       template: "./index.html"
     })
   ]
